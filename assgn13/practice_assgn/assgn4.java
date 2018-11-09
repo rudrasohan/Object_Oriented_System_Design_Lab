@@ -1,0 +1,125 @@
+import java.io.*;
+import java.lang.*;
+import java.util.Arrays;
+abstract class picture{ abstract float area(); abstract void set(float a, float b); abstract void set(float x); abstract float[] get();}
+class rectangle extends picture
+{
+    float p,q;
+    public rectangle(float a, float b){p=a;q=b;}
+    public float area() {return p*q;}
+    public void set(float a, float b){p = p + a;q = q + b;}
+    public void set(float x){}
+    public float[] get() {float arr[] = {p,q}; return arr;}
+}
+class circle extends picture
+{
+    float r;
+    public circle(float a){r=a;}
+    public float area() {return 3.14f*r*r;}
+    public void set(float x){r = r + x;}
+    public void set(float a, float b){}
+    public float[] get() {float arr[] = {r}; return arr;}
+}
+
+class ravi
+{
+    public static void main(String[] args)throws IOException
+    {
+        picture p[] = new picture[20];
+        float a,b;
+        int i,n=0;
+        String s,t,u;
+        char v,w;
+
+        BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
+        do {
+            s = in.readLine();
+            w = s.charAt(0);
+            if(w=='C')
+            {
+                n = n+1;
+                t = s.substring(1);
+                a = Float.parseFloat(t);
+                p[n] = new circle(a);
+                System.out.println(n+" is circle of radius "+a);
+            }
+            if(w=='R')
+            {
+                n = n+1;
+                i = s.indexOf(',');
+                t = s.substring(1,i);
+                a = Float.parseFloat(t);
+                u = s.substring(1+i);
+                b = Float.parseFloat(u);
+                p[n] = new rectangle(a,b);
+                System.out.println(n+" is rectangle of length "+a+" breadth "+b);
+            }
+            if(w=='A')
+            {
+                v = s.charAt(1);
+                i = (int)v - 48;
+                System.out.println(p[i].area());
+            }
+            if(w=='B')
+            {
+                v = s.charAt(1);
+                i = (int)v - 48;
+                if(p[i] instanceof circle)
+                {
+                    p[i].set(10);
+                }
+                else
+                {
+                    p[i].set(5,7);
+                }
+                p[i].area();
+            }
+            if(w=='D')
+            {
+                v = s.charAt(1);
+                i = (int)v - 48;
+                System.out.println(Arrays.toString(p[i].get()));
+            }
+            if(w=='E')
+            {
+                n = n+1;
+                i = s.indexOf(',');
+                t = s.substring(1,i);
+                int x = Integer.parseInt(t);
+                u = s.substring(1+i);
+                int y = Integer.parseInt(u);
+                if(p[x] instanceof rectangle && p[y] instanceof rectangle)
+                {
+                    float t1[] = p[x].get();
+                    float t2[] = p[y].get();
+                    p[x] = new rectangle((float)Math.max(t1[0],t2[0]),Math.max(t1[1],t2[1]));
+                }
+                if(p[x] instanceof rectangle && p[y] instanceof circle)
+                {
+                    float t1[] = p[x].get();
+                    float t2[] = p[y].get();
+                    p[x] = new rectangle((float)Math.max(t1[0],2*t2[0]),Math.max(t1[1],2*t2[0]));
+                }
+                if(p[x] instanceof circle && p[y] instanceof rectangle)
+                {
+                    float t1[] = p[x].get();
+                    float t2[] = p[y].get();
+                    float diag = (float)Math.sqrt(t2[0]*t2[0] + t2[1]*t2[1])/2;
+                    if (diag>t1[0])
+                    { 
+                        p[x] = new circle(diag);
+                    }
+                }
+                if(p[x] instanceof circle && p[y] instanceof circle)
+                {
+                    float t1[] = p[x].get();
+                    float t2[] = p[y].get();
+                    if(t1[0]<t2[0])
+                    { 
+                        p[x] = new circle(t2[0]);
+                    }
+                }
+            }
+        } while (1==1);
+    }
+}
